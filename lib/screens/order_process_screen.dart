@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
+import 'package:url_launcher/url_launcher.dart';
 import '../models/delivery_order.dart';
 import '../widgets/cosmic_background.dart';
 import '../widgets/liquid_notification.dart';
@@ -256,12 +257,26 @@ class _OrderProcessScreenState extends State<OrderProcessScreen>
               children: [
                 const Icon(Icons.phone, color: Color(0xFF10B981), size: 20),
                 const SizedBox(width: 10),
-                Text(
-                  widget.order.customerPhone,
-                  style: GoogleFonts.orbitron(
-                    fontSize: 14,
-                    color: const Color(0xFF10B981),
-                    fontWeight: FontWeight.bold,
+                GestureDetector(
+                  onTap: () async {
+                    final Uri launchUri = Uri(
+                      scheme: 'tel',
+                      path: widget.order.customerPhone,
+                    );
+                    if (await canLaunchUrl(launchUri)) {
+                      await launchUrl(launchUri);
+                    } else {
+                      LiquidNotification.error(context, 'Could not launch dialer');
+                    }
+                  },
+                  child: Text(
+                    widget.order.customerPhone,
+                    style: GoogleFonts.orbitron(
+                      fontSize: 14,
+                      color: const Color(0xFF10B981),
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
                 ),
                 const Spacer(),
@@ -278,8 +293,16 @@ class _OrderProcessScreenState extends State<OrderProcessScreen>
                     'Call',
                     style: GoogleFonts.orbitron(fontSize: 12),
                   ),
-                  onPressed: () {
-                    LiquidNotification.info(context, 'Calling ${widget.order.customerName}...');
+                  onPressed: () async {
+                    final Uri launchUri = Uri(
+                      scheme: 'tel',
+                      path: widget.order.customerPhone,
+                    );
+                    if (await canLaunchUrl(launchUri)) {
+                      await launchUrl(launchUri);
+                    } else {
+                      LiquidNotification.error(context, 'Could not launch dialer');
+                    }
                   },
                 ),
               ],
@@ -485,6 +508,93 @@ class _OrderProcessScreenState extends State<OrderProcessScreen>
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 12),
+          // Order Support Section
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFF10B981).withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: const Color(0xFF10B981).withOpacity(0.3),
+              ),
+            ),
+            child: Row(
+              children: [
+                // Support Agent Icon
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF10B981).withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.support_agent, color: Color(0xFF10B981), size: 20),
+                ),
+                const SizedBox(width: 12),
+                // Order Support Text & Phone Number
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Order Support',
+                        style: GoogleFonts.orbitron(
+                          fontSize: 10,
+                          color: Colors.white60,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '0755077070',
+                        style: GoogleFonts.orbitron(
+                          fontSize: 14,
+                          color: const Color(0xFF10B981),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Call Icon Button - Separate & Clearly Visible
+                GestureDetector(
+                  onTap: () async {
+                    final Uri launchUri = Uri(
+                      scheme: 'tel',
+                      path: '0755077070',
+                    );
+                    if (await canLaunchUrl(launchUri)) {
+                      await launchUrl(launchUri);
+                    } else {
+                      LiquidNotification.error(context, 'Could not launch dialer');
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Color(0xFF10B981), Color(0xFF00C853)],
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF10B981).withOpacity(0.4),
+                          blurRadius: 8,
+                          spreadRadius: 2,
+                        ),
+                      ],
+                    ),
+                    child: const Icon(
+                      Icons.call,
+                      color: Colors.white,
+                      size: 22,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 15),
           Row(

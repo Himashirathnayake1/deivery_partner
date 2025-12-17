@@ -129,13 +129,11 @@ class _DashboardScreenState extends State<DashboardScreen>
             opacity: 0.3,
             child: const CosmicBackground(),
           ),
-
           SafeArea(
             child: Column(
               children: [
-                // Header with online status display
-                _buildHeader(),
-
+                // Header with online status display - only show on home page
+                if (_selectedIndex == 0) _buildHeader(),
                 // Main content
                 Expanded(
                   child: _buildContent(),

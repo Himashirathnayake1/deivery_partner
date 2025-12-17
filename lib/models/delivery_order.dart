@@ -25,6 +25,7 @@ class DeliveryOrder {
   final String id;
   final String customerName;
   final String customerPhone;
+  final String receiverPhone;
   final String pickupLocation;
   final String pickupAddress;
   final String deliveryLocation;
@@ -53,6 +54,7 @@ class DeliveryOrder {
     required this.id,
     required this.customerName,
     required this.customerPhone,
+    this.receiverPhone = '0755077070',
     required this.pickupLocation,
     required this.pickupAddress,
     required this.deliveryLocation,
@@ -82,6 +84,7 @@ class DeliveryOrder {
     String? id,
     String? customerName,
     String? customerPhone,
+    String? receiverPhone,
     String? pickupLocation,
     String? pickupAddress,
     String? deliveryLocation,
@@ -110,6 +113,7 @@ class DeliveryOrder {
       id: id ?? this.id,
       customerName: customerName ?? this.customerName,
       customerPhone: customerPhone ?? this.customerPhone,
+      receiverPhone: receiverPhone ?? this.receiverPhone,
       pickupLocation: pickupLocation ?? this.pickupLocation,
       pickupAddress: pickupAddress ?? this.pickupAddress,
       deliveryLocation: deliveryLocation ?? this.deliveryLocation,

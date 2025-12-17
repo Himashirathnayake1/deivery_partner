@@ -245,8 +245,6 @@ class _WalletScreenState extends State<WalletScreen> with TickerProviderStateMix
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Row(
                 children: [
-                  Expanded(child: _buildStatCard('Today\'s Earnings', 'Rs. 450', Iconsax.trend_up, const Color(0xFF00E676))),
-                  const SizedBox(width: 12),
                   Expanded(child: _buildStatCard('This Week', 'Rs. 2,150', Iconsax.calendar, const Color(0xFF2196F3))),
                   const SizedBox(width: 12),
                   Expanded(child: _buildStatCard('Total Trips', '147', Iconsax.car, const Color(0xFFFF9800))),

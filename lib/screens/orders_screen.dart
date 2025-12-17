@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../widgets/cosmic_background.dart';
 import '../widgets/liquid_notification.dart';
 import '../models/delivery_order.dart';
@@ -139,6 +140,14 @@ class _OrdersScreenState extends State<OrdersScreen>
     }
   }
 
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
   @override
   void dispose() {
     _pulseController.dispose();
@@ -183,91 +192,12 @@ class _OrdersScreenState extends State<OrdersScreen>
             opacity: 0.3,
             child: const CosmicBackground(),
           ),
-
           SafeArea(
-            child: Column(
-              children: [
-                // Header
-                _buildHeader(),
-
-                // Content
-                Expanded(
-                  child: _buildOnlineContent(),
-                ),
-              ],
-            ),
+            child: _buildOnlineContent(),
           ),
         ],
       ),
     );
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            const Color(0xFF1A1A1A).withOpacity(0.9),
-            const Color(0xFF2A2A2A).withOpacity(0.7),
-          ],
-        ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF10B981).withOpacity(0.2),
-            blurRadius: 20,
-            spreadRadius: 5,
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: widget.onBackPressed ?? () => Navigator.pop(context),
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color(0xFF10B981).withOpacity(0.2),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: const Color(0xFF10B981).withOpacity(0.3),
-                ),
-              ),
-              child: const Icon(
-                Icons.arrow_back,
-                color: Color(0xFF10B981),
-              ),
-            ),
-          ),
-          const SizedBox(width: 15),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Orders',
-                  style: GoogleFonts.orbitron(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    )
-        .animate()
-        .slideY(
-            begin: -0.3, end: 0, duration: const Duration(milliseconds: 800))
-        .fadeIn(duration: const Duration(milliseconds: 600));
   }
 
   Widget _buildOnlineContent() {
@@ -469,6 +399,11 @@ class _OrdersScreenState extends State<OrdersScreen>
                     '#${order.id.substring(order.id.length - 6)}',
                     Icons.receipt_long),
                 _buildInfoRow(
+                    'Order Support:',
+                    '0755077070',
+                    Icons.phone,
+                    onPhoneTap: () => _makePhoneCall('0755077070')),
+                _buildInfoRow(
                     'Pickup Location:', order.pickupAddress, Icons.restaurant,
                     onMapTap: () {
                   _openPickupLocationInMap(order);
@@ -584,7 +519,7 @@ class _OrdersScreenState extends State<OrdersScreen>
   }
 
   Widget _buildInfoRow(String label, String value, IconData icon,
-      {VoidCallback? onMapTap}) {
+      {VoidCallback? onMapTap, VoidCallback? onPhoneTap}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -605,7 +540,7 @@ class _OrdersScreenState extends State<OrdersScreen>
               style: GoogleFonts.orbitron(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: Colors.white,
+                color: onPhoneTap != null ? const Color(0xFF4CAF50) : Colors.white,
               ),
             ),
           ),
@@ -633,6 +568,36 @@ class _OrdersScreenState extends State<OrdersScreen>
                 ),
                 child: const Icon(
                   Icons.navigation, // Better Google Maps style icon
+                  size: 16,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+          if (onPhoneTap != null) ...[
+            const SizedBox(width: 8),
+            GestureDetector(
+              onTap: onPhoneTap,
+              child: Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color(0xFF4CAF50),
+                      Color(0xFF45A049)
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF4CAF50).withOpacity(0.4),
+                      blurRadius: 6,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.call,
                   size: 16,
                   color: Colors.white,
                 ),

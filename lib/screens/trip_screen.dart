@@ -11,12 +11,14 @@ class TripScreen extends StatefulWidget {
   final List<DeliveryOrder> activeTrips;
   final Function(DeliveryOrder, double) onTripCompleted;
   final List<TripHistory>? tripHistory;
+  final VoidCallback? onBackPressed;
 
   const TripScreen({
     super.key,
     required this.activeTrips,
     required this.onTripCompleted,
     this.tripHistory,
+    this.onBackPressed,
   });
 
   @override
@@ -182,105 +184,11 @@ class _TripScreenState extends State<TripScreen> with TickerProviderStateMixin {
           ),
 
           SafeArea(
-            child: Column(
-              children: [
-                _buildHeader(),
-                Expanded(
-                  child: _buildContent(),
-                ),
-              ],
-            ),
+            child: _buildContent(),
           ),
         ],
       ),
     );
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            const Color(0xFF1A1A1A).withOpacity(0.9),
-            const Color(0xFF2A2A2A).withOpacity(0.7),
-          ],
-        ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF10B981).withOpacity(0.2),
-            blurRadius: 20,
-            spreadRadius: 5,
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFF9800).withOpacity(0.2),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Text(
-              '🚗',
-              style: TextStyle(fontSize: 24),
-            ),
-          ),
-          const SizedBox(width: 15),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Active Trips',
-                  style: GoogleFonts.orbitron(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                Text(
-                  'Complete your deliveries',
-                  style: GoogleFonts.orbitron(
-                    fontSize: 12,
-                    color: Colors.white70,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: const Color(0xFF4CAF50).withOpacity(0.2),
-              borderRadius: BorderRadius.circular(15),
-              border: Border.all(
-                color: const Color(0xFF4CAF50).withOpacity(0.3),
-              ),
-            ),
-            child: Text(
-              '${widget.activeTrips.length} Active',
-              style: GoogleFonts.orbitron(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFF4CAF50),
-              ),
-            ),
-          ),
-        ],
-      ),
-    )
-        .animate()
-        .slideY(
-            begin: -0.3, end: 0, duration: const Duration(milliseconds: 800))
-        .fadeIn(duration: const Duration(milliseconds: 600));
   }
 
   Widget _buildContent() {
